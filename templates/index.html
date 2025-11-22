@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,74 +8,37 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="container mt-5 mb-5">
-    <h2 class="text-center mb-4">🌊 Prediksi Risiko Banjir Perkotaan</h2>
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
 
-    <!-- Form Input -->
-    <form method="POST" class="mb-5">
-      <div class="row g-3">
-        <div class="col-md-3">
-          <label class="form-label">Curah Hujan (mm)</label>
-          <input type="number" class="form-control" name="rainfall" required>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Tinggi Air (m)</label>
-          <input type="number" class="form-control" name="waterlevel" required>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Kelembaban Tanah (%)</label>
-          <input type="number" class="form-control" name="soil" required>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Elevasi (m)</label>
-          <input type="number" class="form-control" name="elevation" required>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary mt-3 w-100">Prediksi Risiko</button>
-    </form>
+    <div class="card shadow-lg p-5 upload-card">
+      <h2 class="text-center mb-2 title-big">🌧️ Prediksi Risiko Banjir</h2>
+      <p class="text-center text-muted mb-4">
+        Upload file CSV, tunggu proses sebentar, dan lihat hasilnya!
+      </p>
 
-    {% if prediction %}
-    <!-- Grafik Prediksi -->
-    <div class="text-center mb-5">
-      <h4>📊 Grafik Prediksi Risiko Banjir</h4>
-      <img src="{{ plot_url }}" class="img-fluid rounded shadow" alt="Grafik Prediksi">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="alert alert-warning text-center">
+            {{ messages[0] }}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('predict') }}" method="POST" enctype="multipart/form-data">
+        <div class="input-group input-group-lg">
+          <input type="file" class="form-control" name="file" accept=".csv" required>
+        </div>
+        <button class="btn btn-primary w-100 mt-3 btn-lg">
+          Predict Sekarang
+        </button>
+      </form>
+
+      <small class="text-muted d-block mt-3">
+        Kolom wajib CSV: <b>Rainfall_mm, WaterLevel_m, SoilMoisture_pct, Elevation_m</b>.  
+        Kolom lain boleh ada (Date, Location, FloodOccurrence) → otomatis diabaikan.
+      </small>
+
     </div>
-
-    <!-- Ringkasan Prediksi -->
-    <div class="row text-center mb-5 g-3">
-      <div class="col-md-2 col-sm-4">
-        <div class="prediction-box low">
-          <h5>Rendah</h5>
-          <p>{{ prediction['low'] }}</p>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-4">
-        <div class="prediction-box medium-low">
-          <h5>Sedang Rendah</h5>
-          <p>{{ prediction['medium_low'] }}</p>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-4">
-        <div class="prediction-box medium">
-          <h5>Sedang</h5>
-          <p>{{ prediction['medium'] }}</p>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-4">
-        <div class="prediction-box medium-high">
-          <h5>Sedang Tinggi</h5>
-          <p>{{ prediction['medium_high'] }}</p>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-4">
-        <div class="prediction-box high">
-          <h5>Tinggi</h5>
-          <p>{{ prediction['high'] }}</p>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-
   </div>
 </body>
 </html>
