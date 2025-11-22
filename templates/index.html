@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediksi Risiko Banjir</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">🌊 Prediksi Risiko Banjir Perkotaan</h2>
+
+    <!-- Form Input -->
+    <form method="POST" class="mb-5">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Curah Hujan (mm)</label>
+          <input type="number" class="form-control" name="rainfall" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Tinggi Air (m)</label>
+          <input type="number" class="form-control" name="waterlevel" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Kelembaban Tanah (%)</label>
+          <input type="number" class="form-control" name="soil" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Elevasi (m)</label>
+          <input type="number" class="form-control" name="elevation" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3 w-100">Prediksi Risiko</button>
+    </form>
+
+    {% if prediction %}
+    <!-- Grafik Prediksi -->
+    <div class="text-center mb-5">
+      <h4>📊 Grafik Prediksi Risiko Banjir</h4>
+      <img src="{{ plot_url }}" class="img-fluid rounded shadow" alt="Grafik Prediksi">
+    </div>
+
+    <!-- Ringkasan Prediksi -->
+    <div class="row text-center mb-5 g-3">
+      <div class="col-md-2 col-sm-4">
+        <div class="prediction-box low">
+          <h5>Rendah</h5>
+          <p>{{ prediction['low'] }}</p>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-4">
+        <div class="prediction-box medium-low">
+          <h5>Sedang Rendah</h5>
+          <p>{{ prediction['medium_low'] }}</p>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-4">
+        <div class="prediction-box medium">
+          <h5>Sedang</h5>
+          <p>{{ prediction['medium'] }}</p>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-4">
+        <div class="prediction-box medium-high">
+          <h5>Sedang Tinggi</h5>
+          <p>{{ prediction['medium_high'] }}</p>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-4">
+        <div class="prediction-box high">
+          <h5>Tinggi</h5>
+          <p>{{ prediction['high'] }}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</body>
+</html>
